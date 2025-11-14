@@ -1,7 +1,8 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, AttachmentBuilder } = require('discord.js');
 const cron = require('node-cron');
 const fs = require('fs');
+const path = require('path');
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
@@ -42,10 +43,26 @@ function nextRole() {
   return getCurrentRole();
 }
 
-// Helper: kirim pesan ke channel
+// Helper: dapatkan path gambar berdasarkan role
+function getRoleImagePath(roleName) {
+  const imagePath = path.join(__dirname, 'img', `${roleName}.jpg`);
+  return fs.existsSync(imagePath) ? imagePath : null;
+}
+
+// Helper: kirim pesan dengan gambar ke channel
 async function sendRoleMessage(channel, emoji = '🐬') {
   try {
-    await channel.send(`${emoji} **Role Hari Ini:** ${getCurrentRole()}`);
+    const role = getCurrentRole();
+    const imagePath = getRoleImagePath(role);
+    
+    const messageContent = `${emoji} **Role Hari Ini:** ${role}`;
+    
+    if (imagePath) {
+      const attachment = new AttachmentBuilder(imagePath);
+      await channel.send({ content: messageContent, files: [attachment] });
+    } else {
+      await channel.send(messageContent);
+    }
   } catch {}
 }
 
@@ -60,7 +77,16 @@ client.once('clientReady', async () => {
     try {
       const channel = await client.channels.fetch(process.env.CHANNEL_ID);
       const roleBaru = nextRole();
-      await channel.send(`🎲 **Role Hari Ini:** ${roleBaru}`);
+      const imagePath = getRoleImagePath(roleBaru);
+      
+      const messageContent = `🎲 **Role Hari Ini:** ${roleBaru}`;
+      
+      if (imagePath) {
+        const attachment = new AttachmentBuilder(imagePath);
+        await channel.send({ content: messageContent, files: [attachment] });
+      } else {
+        await channel.send(messageContent);
+      }
     } catch {}
   }, { timezone: 'Asia/Jakarta' });
 });
@@ -69,9 +95,20 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot || !client.isReady() || message.content.toLowerCase() !== '!role') return;
   
   try {
-    await message.reply(`🐬 **Role Hari Ini:** ${getCurrentRole()}`).catch(() => {
-      message.channel?.send(`🐬 **Role Hari Ini:** ${getCurrentRole()}`);
-    });
+    const role = getCurrentRole();
+    const imagePath = getRoleImagePath(role);
+    const messageContent = `🐬 **Role Hari Ini:** ${role}`;
+    
+    if (imagePath) {
+      const attachment = new AttachmentBuilder(imagePath);
+      await message.reply({ content: messageContent, files: [attachment] }).catch(() => {
+        message.channel?.send({ content: messageContent, files: [attachment] });
+      });
+    } else {
+      await message.reply(messageContent).catch(() => {
+        message.channel?.send(messageContent);
+      });
+    }
   } catch {}
 });
 

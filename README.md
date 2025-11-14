@@ -21,8 +21,8 @@ Discord bot untuk rotasi role harian dengan jadwal otomatis setiap jam 00:00 WIB
 
 1. Clone repository ini:
 ```bash
-git clone https://github.com/username/SoundnessMengingatkan.git
-cd SoundnessMengingatkan
+git clone https://github.com/ddettaa/soundness-mengingatkan.git
+cd soundness-mengingatkan
 ```
 
 2. Install dependencies:
@@ -88,6 +88,7 @@ Bot akan otomatis:
 ## 📝 Command
 
 ### `!role`
+
 Menampilkan role hari ini.
 
 **Contoh:**
@@ -99,6 +100,7 @@ Bot: 🐬 **Role Hari Ini:** Bloop
 ## 🔄 Rotasi Role
 
 Bot akan merotasi role secara otomatis dengan urutan:
+
 1. Zippy
 2. Bloop
 3. Blu
@@ -111,7 +113,7 @@ Rotasi terjadi setiap hari jam 00:00 WIB (Asia/Jakarta).
 ## 📁 Struktur Proyek
 
 ```
-SoundnessMengingatkan/
+soundness-mengingatkan/
 ├── index.js              # File utama bot
 ├── package.json          # Dependencies
 ├── .env                  # Environment variables (tidak di-commit)
@@ -129,21 +131,25 @@ SoundnessMengingatkan/
 ## ⚠️ Troubleshooting
 
 ### Bot tidak merespons command
+
 - Pastikan bot sudah online di server
 - Pastikan **MESSAGE CONTENT INTENT** sudah diaktifkan
 - Pastikan bot memiliki permission untuk membaca dan mengirim pesan
 
 ### Error "Unknown Channel"
+
 - Pastikan `CHANNEL_ID` di `.env` sudah benar
 - Pastikan bot sudah ditambahkan ke server yang memiliki channel tersebut
 - Pastikan bot memiliki akses ke channel
 
 ### Error "Invalid token"
+
 - Pastikan `DISCORD_TOKEN` di `.env` sudah benar
 - Pastikan token tidak ada spasi atau karakter tambahan
 - Coba reset token di Discord Developer Portal
 
 ### Timeout Error
+
 - Cek koneksi internet
 - Cek firewall/antivirus yang mungkin memblokir koneksi
 - Bot akan otomatis retry 3 kali
@@ -154,4 +160,8 @@ ISC
 
 ## 👤 Author
 
-@ddettaa
+[@ddettaa](https://github.com/ddettaa)
+
+---
+
+**Note:** Jangan pernah commit file `.env` ke repository! File ini berisi informasi sensitif.
